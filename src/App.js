@@ -4,10 +4,25 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import React from 'react';
 
+/**
+ * Explicación:
+ * 
+ * Este es un ejemplo de un formulario que valida los campos de email y password.
+ * La idea es usar un hook de estado que actualize el valor de nuestras variables según
+ * el usuario las vaya typeando (onChange). Sin embargo, solamente se valida cuando el usuario
+ * sale del campo (onBlur). Además, cuando el usuario vuelve a enfocar el elemento, deja de 
+ * estar en estado de error (onFocus) hasta que sale del campo.
+ * 
+ * Para esto también se tiene un hook de estado que guarda el estado de validación de los campos: 
+ * validatedForm. Este estado se actualiza cada vez que se valida un campo.
+ * @author Miguel Reina
+ * 
+ */
+
+
 function App() {
   // Logic states
   const [formValues, setFormValues] = useState({email:"", password:"", favClass:"1"});
-  const validationStates = {emailState: true, passwordState: true};
   const [validatedForm, setValidatedForm] = useState({emailState: true, passwordState: true});
   // React states
   const [email, setEmail] = React.useState("form-control");
@@ -35,7 +50,6 @@ function App() {
     let email = formValues.email;
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
     let isValid = emailRegex.test(email);
-    validationStates.emailState = isValid;
     setEmail(isValid ? "form-control" : "form-control is-invalid");
     setValidatedForm({...validatedForm, emailState: isValid});
     return isValid;
@@ -44,15 +58,14 @@ function App() {
   const validatePassword = () => {
     let password = formValues.password;
     let isValid = password.length >=9 && password.match(/[0-9]/) && password.match(/[a-zA-Z]/);
-    validationStates.passwordState = isValid;
     setPasswordChange(isValid ? "form-control" : "form-control is-invalid")
     setValidatedForm({...validatedForm, passwordState: isValid});
     return isValid;
   }
 
   const validateForm = () => {
-    return validationStates.emailState && 
-      validationStates.passwordState &&
+    return validatedForm.emailState && 
+    validatedForm.passwordState &&
       formValues.email.length > 0 &&
       formValues.password.length > 0;
   }

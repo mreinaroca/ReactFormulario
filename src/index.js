@@ -3,11 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import { Row, Container, Col } from 'react-bootstrap';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Container>
+      <Row xs={1}>
+        <Col>
+          <App/>
+        </Col>
+      </Row>
+    </Container>
   </React.StrictMode>
 );
 

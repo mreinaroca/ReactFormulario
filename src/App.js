@@ -10,32 +10,35 @@ function App() {
   const [validationStates, setValidationStates] = useState({ emailState:true, password: true });
   // React states
   const [email, setEmail] = React.useState("form-control");
-  const {password, setPassword} = React.useState("form-control");
+  const [password, setPasswordChange] = React.useState("form-control");
 
   const handleEmailChange = ((e) => {
     setFormValues({...formValues, email: e.target.value});
-    let isValid = validateEmail(e.target.value);
-    setValidationStates({...validationStates, emailState: isValid});
-    setEmail(isValid ? "form-control" : "form-control is-invalid");
   });
+
 
   const handlePasswordChange = ((e) => {
     setFormValues({...formValues, password:e.target.value});
-    let isValid = validatePassword(e.target.value);
-    setValidationStates({...validationStates, passwordState: validatePassword(isValid)});
-    setPassword(isValid ? "form-control" : "form-control is-invalid");
   })
 
   const handleSelectChange = ((e) => {
     setFormValues({...formValues, favClass: e.target.value});
   })
 
+
+  
   const validateEmail = (email) => {
-    return email.includes('@') && email.includes('.') && email.length > 5;
+    let isValid = email.includes('@') && email.includes('.') && email.length > 5;
+    setValidationStates({...validationStates, emailState: isValid});
+    setEmail(isValid ? "form-control" : "form-control is-invalid");
+    return isValid;
   }
 
   const validatePassword = (password) => {
-    return password.length >=9 && password.match(/[0-9]/) && password.match(/[a-zA-Z]/);
+    let isValid = password.length >=9 && password.match(/[0-9]/) && password.match(/[a-zA-Z]/);
+    setValidationStates({...validationStates, passwordState: validatePassword(isValid)});
+    setPasswordChange(isValid ? "form-control" : "form-control is-invalid")
+    return isValid;
   }
 
   const validateForm = () => {
@@ -57,13 +60,27 @@ function App() {
 
         <Form.Group className="mb-6" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" className={email} placeholder="Enter email" onChange={handleEmailChange} value={formValues.email}/>
+          <Form.Control 
+            type="email" 
+            className={email} 
+            placeholder="Enter email" 
+            onChange={handleEmailChange} 
+            onFocus={validateEmail(formValues.email)}
+            value={formValues.email}
+          />
           { !validationStates.emailState && <Form.Text className="text-muted">We'll never share your email with anyone else.</Form.Text>}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" onChange={handlePasswordChange}/>
+          <Form.Control 
+            type="password" 
+            className={password} 
+            placeholder="Password" 
+            onChange={handlePasswordChange} 
+            onFocus={validatePassword}
+            value={formValues.password}
+          />
           { !validationStates.passwordState && <Form.Text className="text-muted">Your password should have numbers and letters and should be at least 9 characters long</Form.Text>}
         </Form.Group>
 
